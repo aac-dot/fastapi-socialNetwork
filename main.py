@@ -22,10 +22,10 @@ def get_posts():
     return {"data": "this is your post"}
 
 @app.post("/createposts")
-def create_posts(new_post: Post):
-    print(new_post.rating)
+def create_posts(post: Post):
+    print(post.rating)
     # return {"new_post": f"title: {new_post['title']} content: {new_post['content']}"}
     # return {"title": payload["title"], "content": payload["content"]}
-    print(new_post.model_dump())
-    return {"data": new_post.model_dump()}
+    print(post.model_dump())
+    return {"data": post.model_dump()}
     
