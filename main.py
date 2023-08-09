@@ -21,7 +21,7 @@ async def root():
 def get_posts():
     return {"data": "this is your post"}
 
-@app.post("/createposts")
+@app.post("/posts")
 def create_posts(post: Post):
     print(post.rating)
     # return {"new_post": f"title: {new_post['title']} content: {new_post['content']}"}
