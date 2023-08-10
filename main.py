@@ -17,6 +17,11 @@ class Post(BaseModel):
 # my_posts = [{"title": "title of post 1", "content": "content post 1", "id": 1}, {"title": "title of post 2", "content": "content post 1", "id": 1}]
 my_posts = [{"title": f"title of post {i}", "content": f"content post {i}", "id": i} for i in range(1, MAX_POSTS + 1)]
 
+def find_post(id):
+    for post in my_posts:
+        if post['id'] == id:
+            return post
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -33,3 +38,8 @@ def create_posts(post: Post):
     
     return {"data": new_post}
     
+@app.get("/posts/{id}")
+def get_post(id: int):
+    
+    post = find_post(id)
+    return {"data": post}
