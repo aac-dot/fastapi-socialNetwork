@@ -30,7 +30,7 @@ async def root():
 def get_posts():
     return {"data": my_posts}
 
-@app.post("/posts")
+@app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_posts(post: Post):
     new_post = post.model_dump() # Convert to dict
     new_post['id'] = randrange(0, 100000)
