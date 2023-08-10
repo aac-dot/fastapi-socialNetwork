@@ -2,6 +2,7 @@ from typing import Optional
 from fastapi import FastAPI
 from fastapi.params import Body
 from pydantic import BaseModel
+from random import randrange
 
 MAX_POSTS = 100
 
@@ -26,7 +27,9 @@ def get_posts():
 
 @app.post("/posts")
 def create_posts(post: Post):
-    print(post.rating)
-    print(post.model_dump())
-    return {"data": post.model_dump()}
+    new_post = post.model_dump() # Convert to dict
+    new_post['id'] = randrange(0, 100000)
+    my_posts.append(new_post)
+    
+    return {"data": new_post}
     
