@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from random import randrange
 # from psycopg2 import connect
 from psycopg import connect
-from psycopg2.extras import RealDictCursor
+from psycopg.rows import dict_row
 
 MAX_POSTS = 100
 
@@ -22,7 +22,7 @@ while True:
     try:
         # conn = connect(host="localhost", database="fastapi", user="postgres", password="postgres",
         #                cursor_factory=RealDictCursor)
-        conn = connect(conninfo="host=localhost dbname=fastapi user=postgres password=postgres")
+        conn = connect(conninfo="host=localhost dbname=fastapi user=postgres password=postgres", row_factory=dict_row)
         cursor = conn.cursor()
         print(conn)
         print("Database connection was succesfull!")
@@ -59,9 +59,10 @@ def get_posts():
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_posts(post: Post):
-    new_post = post.model_dump() # Convert to dict
-    new_post['id'] = randrange(0, MAX_POSTS)
-    my_posts.append(new_post)
+    # Insert in database with the data already sanited.
+    cursor.execute(""" INSERT INTO public." posts" (title, content, published) VALUES (%s, %s, %s) RETURNING * """, (post.title, post.content, post.published))
+    new_post = cursor.fetchone()
+    conn.commit()
     
     return {"data": new_post}
     
