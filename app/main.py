@@ -24,6 +24,7 @@ while True:
         #                cursor_factory=RealDictCursor)
         conn = connect(conninfo="host=localhost dbname=fastapi user=postgres password=postgres")
         cursor = conn.cursor()
+        print(conn)
         print("Database connection was succesfull!")
         break
     except Exception as error:
@@ -50,7 +51,11 @@ async def root():
 
 @app.get("/posts")
 def get_posts():
-    return {"data": my_posts}
+    cursor.execute("""SELECT * FROM public." posts" """) # This select format was taken from the pgAdmin when execute a search on the table.
+    posts = cursor.fetchall()
+    
+    print(posts)
+    return {"data": posts}
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_posts(post: Post):
