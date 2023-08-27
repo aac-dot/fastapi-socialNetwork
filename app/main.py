@@ -8,21 +8,12 @@ from psycopg import connect
 from psycopg.rows import dict_row
 from sqlalchemy.orm import Session
 
-
 import models
-from database import engine, SessionLocal
+from database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 class Post(BaseModel):
     title: str
