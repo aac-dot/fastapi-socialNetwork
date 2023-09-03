@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, Boolean, text
+from sqlalchemy import Column, Integer, String, Boolean, text, ARRAY
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 
 class Post(Base):
@@ -9,4 +9,5 @@ class Post(Base):
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
     published = Column(Boolean, nullable=True, server_default="TRUE")
+    # rating = Column(ARRAY(Integer), nullable=True, server_default="None")
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
