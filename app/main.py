@@ -8,7 +8,7 @@ from psycopg.rows import dict_row
 from sqlalchemy.orm import Session
 
 from . import models
-from .schemas import Post
+from .schemas import PostCreate
 from .database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
@@ -34,12 +34,6 @@ while True:
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/sqlalchemy")
-def test_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Post).all()
-    
-    return {"data": posts}
-
 @app.get("/posts")
 def get_posts(db: Session = Depends(get_db)):
     # cursor.execute("""SELECT * FROM public." posts" """) # This select format was taken from the pgAdmin when execute a search on the table.
@@ -51,7 +45,7 @@ def get_posts(db: Session = Depends(get_db)):
     return {"data": posts}
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_posts(post: Post, db: Session = Depends(get_db)):
+def create_posts(post: PostCreate, db: Session = Depends(get_db)):
     # Insert in database with the data already sanited.
     # cursor.execute(""" INSERT INTO public." posts" (title, content, published) VALUES (%s, %s, %s) RETURNING * """, (post.title, post.content, post.published))
     # new_post = cursor.fetchone()
@@ -95,7 +89,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @app.put("/posts/{id}")
-def update_post(id: int, updated_post: Post, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)):
     
     # cursor.execute(""" UPDATE pub lic." posts" SET title = %s, content = %s, published = %s WHERE id = %s RETURNING * """, (post.title, post.content, post.published, str(id)))
     # updated_post = cursor.fetchone()
