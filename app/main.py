@@ -1,25 +1,19 @@
 import time
 from typing import Optional
 from fastapi import FastAPI, Response, status,  HTTPException, Depends
-from pydantic import BaseModel
 from random import randrange
 # from psycopg2 import connect
 from psycopg import connect
 from psycopg.rows import dict_row
 from sqlalchemy.orm import Session
 
-import models
-from database import engine, get_db
+from . import models
+from .schemas import Post
+from .database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
-class Post(BaseModel):
-    title: str
-    content: str
-    published: bool = True
-    # rating: Optional[int] = None
 
 while True:
     # Interface with database
