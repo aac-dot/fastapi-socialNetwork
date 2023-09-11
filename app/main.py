@@ -1,5 +1,5 @@
 import time
-from typing import Optional, List
+from typing import List
 from fastapi import FastAPI, Response, status,  HTTPException, Depends
 from random import randrange
 # from psycopg2 import connect
@@ -8,7 +8,7 @@ from psycopg.rows import dict_row
 from sqlalchemy.orm import Session
 
 from . import models
-from .schemas import PostCreate, Post
+from .schemas import PostCreate, Post, UserCreate, UserResponse
 from .database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
@@ -108,3 +108,13 @@ def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)
     db.commit()
     
     return post_query.first()
+
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    new_user = models.Users(**user.model_dump())
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    return new_user
