@@ -7,9 +7,11 @@ from psycopg import connect
 from psycopg.rows import dict_row
 from sqlalchemy.orm import Session
 
+
 from . import models
 from .schemas import PostCreate, Post, UserCreate, UserResponse
 from .database import engine, get_db
+from .utils import hash
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -112,6 +114,9 @@ def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)
 
 @app.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    
+    user.password = hash(user.password)
+    
     new_user = models.Users(**user.model_dump())
     
     db.add(new_user)
