@@ -70,6 +70,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with the id: {id} was not found")
     
     print(post)
+    
     return post
 
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -118,3 +119,15 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     
     return new_user
+
+@app.get("/users/{id}", response_model=UserResponse)
+def get_user(id: int, db: Session = Depends(get_db),):
+    
+    user = db.query(models.Users).filter(models.Users.id == id).first()
+    
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with the id: {id} was not found")
+    
+    print(user)
+    
+    return user
