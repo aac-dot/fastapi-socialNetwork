@@ -120,8 +120,15 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     
     return new_user
 
+@app.get("/users", response_model=List[UserResponse])
+def get_user(db: Session = Depends(get_db)):
+    
+    users = db.query(models.Users).all()
+    
+    return users
+
 @app.get("/users/{id}", response_model=UserResponse)
-def get_user(id: int, db: Session = Depends(get_db),):
+def get_user(id: int, db: Session = Depends(get_db)):
     
     user = db.query(models.Users).filter(models.Users.id == id).first()
     
