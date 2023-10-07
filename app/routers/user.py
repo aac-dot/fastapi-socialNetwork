@@ -7,9 +7,11 @@ from ..database import get_db
 from .. import models
 from ..utils import hash
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/users"
+)
 
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     
     user.password = hash(user.password)
@@ -22,14 +24,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     
     return new_user
 
-@router.get("/users", response_model=List[UserResponse])
+@router.get("/", response_model=List[UserResponse])
 def get_user(db: Session = Depends(get_db)):
     
     users = db.query(models.Users).all()
     
     return users
 
-@router.get("/users/{id}", response_model=UserResponse)
+@router.get("/{id}", response_model=UserResponse)
 def get_user(id: int, db: Session = Depends(get_db)):
     
     user = db.query(models.Users).filter(models.Users.id == id).first()
