@@ -8,7 +8,8 @@ from .. import models
 from ..utils import hash
 
 router = APIRouter(
-    prefix="/users"
+    prefix="/users",
+    tags=["Users"]
 )
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
