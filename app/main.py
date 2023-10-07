@@ -12,7 +12,7 @@ models.Base.metadata.create_all(bind=engine)
 from .routers import post, user
 
 app = FastAPI()
-
+'''
 while True:
     # Interface with database
     try:
@@ -27,6 +27,7 @@ while True:
         print("Connection with database failed")
         print("The following error has happened:", error)
         time.sleep(2)
+'''
 
 app.include_router(post.router)
 app.include_router(user.router)
