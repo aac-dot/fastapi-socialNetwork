@@ -7,11 +7,11 @@ from psycopg.rows import dict_row
 from . import models
 from .database import engine
 
-models.Base.metadata.create_all(bind=engine)
-
 from .routers import post, user, auth
 
 app = FastAPI()
+
+models.Base.metadata.create_all(bind=engine)
 '''
 while True:
     # Interface with database

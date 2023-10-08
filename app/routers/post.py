@@ -5,6 +5,7 @@ from typing import List
 from ..schemas import PostCreate, Post
 from ..database import get_db
 from .. import models
+from ..oauth2 import get_current_user
 
 
 router = APIRouter(
@@ -23,11 +24,12 @@ def get_posts(db: Session = Depends(get_db)):
     return posts
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=Post)
-def create_posts(post: PostCreate, db: Session = Depends(get_db)):
+def create_posts(post: PostCreate, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
     # Insert in database with the data already sanited.
     # cursor.execute(""" INSERT INTO public." posts" (title, content, published) VALUES (%s, %s, %s) RETURNING * """, (post.title, post.content, post.published))
     # new_post = cursor.fetchone()
     # conn.commit()
+    print(user_id)
     new_post = models.Post(**post.model_dump())
     db.add(new_post)
     db.commit()
