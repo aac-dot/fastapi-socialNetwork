@@ -14,7 +14,6 @@ class Post(PostBase):
     created_at: datetime
 
 class UserBase(BaseModel):
-    id: int
     email: EmailStr
 
 class UserCreate(UserBase):
@@ -22,3 +21,6 @@ class UserCreate(UserBase):
     
 class UserResponse(UserBase):
     created_at: datetime
+    
+class UserLogin(UserBase):
+    password: str

@@ -17,9 +17,9 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     
     user.password = hash(user.password)
     
-    new_user = models.Users(**user.model_dump())
+    new_user = models.User(**user.model_dump())
     
-    db.add(new_user) 
+    db.add(new_user)
     db.commit()
     db.refresh(new_user)
     
@@ -28,14 +28,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=List[UserResponse])
 def get_user(db: Session = Depends(get_db)):
     
-    users = db.query(models.Users).all()
+    users = db.query(models.User).all()
     
     return users
 
 @router.get("/{id}", response_model=UserResponse)
 def get_user(id: int, db: Session = Depends(get_db)):
     
-    user = db.query(models.Users).filter(models.Users.id == id).first()
+    user = db.query(models.User).filter(models.User.id == id).first()
     
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with the id: {id} was not found")

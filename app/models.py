@@ -12,7 +12,7 @@ class Post(Base):
     # rating = Column(ARRAY(Integer), nullable=True, server_default="None")
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     
-class Users(Base):
+class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String, nullable=False, unique=True)
