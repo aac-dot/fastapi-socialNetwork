@@ -24,12 +24,12 @@ def get_posts(db: Session = Depends(get_db)):
     return posts
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=Post)
-def create_posts(post: PostCreate, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
+def create_posts(post: PostCreate, db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
     # Insert in database with the data already sanited.
     # cursor.execute(""" INSERT INTO public." posts" (title, content, published) VALUES (%s, %s, %s) RETURNING * """, (post.title, post.content, post.published))
     # new_post = cursor.fetchone()
     # conn.commit()
-    print(user_id)
+    print(current_user)
     new_post = models.Post(**post.model_dump())
     db.add(new_post)
     db.commit()
@@ -54,7 +54,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
     return post
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db)):
+def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
     
     # cursor.execute(""" DELETE FROM public." posts" WHERE id = %s returning * """, [str(id)])
     # deleted_post = cursor.fetchone()
@@ -71,7 +71,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @router.put("/{id}", response_model=Post)
-def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db), usecurrent_user: int = Depends(get_current_user)):
     # cursor.execute(""" UPDATE pub lic." posts" SET title = %s, content = %s, published = %s WHERE id = %s RETURNING * """, (post.title, post.content, post.published, str(id)))
     # updated_post = cursor.fetchone()
     # conn.commit()
