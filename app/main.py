@@ -1,8 +1,9 @@
-import time
 from fastapi import FastAPI
+
+# import time
 # from psycopg2 import connect
-from psycopg import connect
-from psycopg.rows import dict_row
+# from psycopg import connect
+# from psycopg.rows import dict_row
 
 from . import models
 from .database import engine
