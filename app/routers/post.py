@@ -61,12 +61,17 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depe
     # deleted_post = cursor.fetchone()
     # conn.commit()
     
-    post = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post = post_query.first()
     
-    if post.first() is None:
+    if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} doesn't exist")
+    
+    
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Not auhthorized to perform requested action")
 
-    post.delete(synchronize_session=False)
+    post_query.delete(synchronize_session=False)
     db.commit()
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
